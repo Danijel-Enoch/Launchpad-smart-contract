@@ -45,32 +45,8 @@ contract SeedifyFundsContract is Ownable {
     //min allocation per user in a tier
     uint256[9] public minAllocaPerUserInTiers;
 
-    // address array for tier one whitelist
-    address[] private whitelistTierOne;
-
-    // address array for tier two whitelist
-    address[] private whitelistTierTwo;
-
-    // address array for tier three whitelist
-    address[] private whitelistTierThree;
-
-    // address array for tier Four whitelist
-    address[] private whitelistTierFour;
-
-    // address array for tier Five whitelist
-    address[] private whitelistTierFive;
-
-    // address array for tier Six whitelist
-    address[] private whitelistTierSix;
-
-    // address array for tier Seven whitelist
-    address[] private whitelistTierSeven;
-
-    // address array for tier Eight whitelist
-    address[] private whitelistTierEight;
-
-    // address array for tier Nine whitelist
-    address[] private whitelistTierNine;
+    // tier => users in tier
+    mapping(uint256 => address[]) public whitelistOfTier;
 
     IERC20 public ERC20Interface;
     address public tokenAddress;
@@ -220,15 +196,7 @@ contract SeedifyFundsContract is Ownable {
                 "Tier max limit reached"
             );
 
-            if (_tier == 1) whitelistTierOne.push(_address);
-            else if (_tier == 2) whitelistTierTwo.push(_address);
-            else if (_tier == 3) whitelistTierThree.push(_address);
-            else if (_tier == 4) whitelistTierFour.push(_address);
-            else if (_tier == 5) whitelistTierFive.push(_address);
-            else if (_tier == 6) whitelistTierSix.push(_address);
-            else if (_tier == 7) whitelistTierSeven.push(_address);
-            else if (_tier == 8) whitelistTierEight.push(_address);
-            else if (_tier == 9) whitelistTierNine.push(_address);
+            whitelistOfTier[_tier].push(_address);
 
             numberOfParticipants += 1;
             numberOfUserInTiers[_tier - 1] += 1;
@@ -246,15 +214,7 @@ contract SeedifyFundsContract is Ownable {
 
         address[] memory _whitelistTier;
 
-        if (_tier == 1) _whitelistTier = whitelistTierOne;
-        else if (_tier == 2) _whitelistTier = whitelistTierTwo;
-        else if (_tier == 3) _whitelistTier = whitelistTierThree;
-        else if (_tier == 4) _whitelistTier = whitelistTierFour;
-        else if (_tier == 5) _whitelistTier = whitelistTierFive;
-        else if (_tier == 6) _whitelistTier = whitelistTierSix;
-        else if (_tier == 7) _whitelistTier = whitelistTierSeven;
-        else if (_tier == 8) _whitelistTier = whitelistTierEight;
-        else if (_tier == 9) _whitelistTier = whitelistTierNine;
+        _whitelistTier = whitelistOfTier[_tier];
 
         for (uint256 i = 0; i < _whitelistTier.length; i++) {
             address _addressArr = _whitelistTier[i];
